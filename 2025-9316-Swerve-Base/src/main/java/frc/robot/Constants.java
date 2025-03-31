@@ -65,8 +65,15 @@ public class Constants {
         public static final double APRILTAG_RED_SHOOTER_HEIGHT = 0.0; // Units?
         public static final double CAMERA_PITCH = 0.0; // Units? (e.g., degrees)
 
-        public static final double xOffset = .25;
-        public static final double yOffsetLeft = 0.12;
+        public static final double xOffset = .225; //0.25 -Foward +Back
+        public static final double yOffsetLeft = 3; //.12 +LEFT -RIGHT
+        
+        
+        
+        
+        
+        
+       //ignore 
         public static final double yOffsetRight = -.1;
 
         
@@ -77,7 +84,7 @@ public class Constants {
         public static double VR_Kd = 0.0;
 
         //Vision Drive PID vars Left and Right
-        public static double VY_Kp = 0.006;
+        public static double VY_Kp = 0.007;
         public static double VY_Ki = 0.00001;
         public static double VY_Kd = 0.00001;
 

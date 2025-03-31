@@ -2,18 +2,14 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.Constants;
 import frc.robot.Constants.CoralHandlerConstants;
-import frc.robot.Constants.LEDConstants;
 
 public class CoralHandlerSubsystem extends SubsystemBase {
 
@@ -63,7 +59,7 @@ public class CoralHandlerSubsystem extends SubsystemBase {
 
     }
     public void back(){
-        coralHandlerMotor.set(-0.10);
+        coralHandlerMotor.set(-0.19);
         setLEDColor(Constants.LEDConstants.RED, "red");
 
     }
@@ -92,7 +88,7 @@ public class CoralHandlerSubsystem extends SubsystemBase {
             isCoralInProcess = true;
             setLEDColor(Constants.LEDConstants.BLUE,"Blue"); // Idle
             //System.out.println("[Coral Handler] Intake Started - Hopper Beam Broken");
-            coralHandlerMotor.set(.35);
+            coralHandlerMotor.set(.2);
         }
 
         if (!intakeBroken && !hopperBroken && isCoralInProcess) {

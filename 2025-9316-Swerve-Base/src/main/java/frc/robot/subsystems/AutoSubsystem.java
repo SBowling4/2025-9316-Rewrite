@@ -118,6 +118,11 @@ public class AutoSubsystem extends SubsystemBase {
 
     public static Command L1Pos(ElevatorSubsystem elevatorSubsystem){
         logger.info("Executing Coral L1 height Auto Mode");
+        return new SequentialCommandGroup(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L1_POSITION).withTimeout(1));
+    }
+
+    public static Command L1PosLONG(ElevatorSubsystem elevatorSubsystem){
+        logger.info("Executing Coral L1 height Auto Mode");
         return new SequentialCommandGroup(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L1_POSITION).withTimeout(3));
     }
 

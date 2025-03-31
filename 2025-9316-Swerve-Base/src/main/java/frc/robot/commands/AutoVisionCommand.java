@@ -63,8 +63,8 @@ public class AutoVisionCommand  extends Command{
         // Apply the drive command
         // Create the request
         SwerveRequest.RobotCentric request = visDrive
-        .withVelocityX(velocityX*2)
-        .withVelocityY(velocityY)
+        .withVelocityX(velocityX)
+        .withVelocityY(velocityY*1.5)
         .withRotationalRate(rotationalRate);
 
         System.out.println(request);

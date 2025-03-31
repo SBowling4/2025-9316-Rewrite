@@ -95,6 +95,7 @@ public class RobotContainer {
     public final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem(coralHandler, ledSubsystem); // Initialize Elevator Subsystem
     //private final SendableChooser<Command> autoChooser = new SendableChooser<>();
     private final SendableChooser<Command> autoChooser;
+    
     public RobotContainer(){
         NamedCommands.registerCommand("AutoExchange", autoSubsystem.AutoExchange(coralHandler, elevatorSubsystem, algaeSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
         NamedCommands.registerCommand("AutoVisionCommand", autoSubsystem.AutoVision(coralHandler, visionSubsystem, drivetrain).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
@@ -103,6 +104,8 @@ public class RobotContainer {
         NamedCommands.registerCommand("Scoral", autoSubsystem.Scoral(coralHandler));
         NamedCommands.registerCommand("L2Pos", autoSubsystem.L2Pos(elevatorSubsystem));
         NamedCommands.registerCommand("L1Pos", autoSubsystem.L1Pos(elevatorSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
+        NamedCommands.registerCommand("L1PosLONG", autoSubsystem.L1Pos(elevatorSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
+
         NamedCommands.registerCommand("IntakePos", autoSubsystem.IntakePos(elevatorSubsystem));
         NamedCommands.registerCommand("Algae1Pos", autoSubsystem.IntakePos(elevatorSubsystem));
 
@@ -194,39 +197,18 @@ xboxDrive.x().whileTrue(
         // Rotation to align parallel to the target
         .withRotationalRate(-visionSubsystem.calculateParallelRotationPower(
             -xboxDrive.getRightX() * MaxAngularRate / 2,
-            true) * MaxAngularRate)
+            true) * 0)
     )
 );
 
-xboxDrive.b().whileTrue(
-    drivetrain.applyRequest(() -> visDrive
-        // Forward/backward movement based on distance from target
-        .withVelocityX(-visionSubsystem.calculateXPower(
-            -xboxDrive.getLeftY() * MaxSpeed / 6,
-            Constants.VisionConstants.xOffset,
-            true) * MaxSpeed/6)
-            
-        // Left/right movement to center with the target
-        .withVelocityY(visionSubsystem.calculateYPower(
-            -xboxDrive.getLeftX() * MaxSpeed / 6,
-            Constants.VisionConstants.yOffsetRight,
-            true) * MaxSpeed)
-            
-        // Rotation to align parallel to the target
-        .withRotationalRate(visionSubsystem.calculateParallelRotationPower(
-            -xboxDrive.getRightX() * MaxAngularRate / 2,
-            true) * MaxAngularRate)
-    )
-);
+        xboxDrive.b().onTrue(new InstantCommand(() -> ledSubsystem.changeAnimation(LEDSubsystem.AnimationTypes.Fire)));
 
+        gamepadManipulator.leftTrigger().whileTrue(new AlgaeCommand(algaeSubsystem, AlgaeMode.EJECT));
+        xboxDrive.leftTrigger().whileTrue(new AlgaeCommand(algaeSubsystem, AlgaeMode.INTAKE));
+        xboxDrive.a().whileTrue(drivetrain.applyRequest(() -> brake));
+        //xboxDrive.b().whileTrue(drivetrain.applyRequest(() ->
 
-
-           gamepadManipulator.leftTrigger().whileTrue(new AlgaeCommand(algaeSubsystem, AlgaeMode.EJECT));
-           xboxDrive.leftTrigger().whileTrue(new AlgaeCommand(algaeSubsystem, AlgaeMode.INTAKE));
-           xboxDrive.a().whileTrue(drivetrain.applyRequest(() -> brake));
-           //xboxDrive.b().whileTrue(drivetrain.applyRequest(() ->
-
-            //point.withModuleDirection(new Rotation2d(-xboxDrive.getLeftY(), -xboxDrive.getLeftX()))
+        //point.withModuleDirection(new Rotation2d(-xboxDrive.getLeftY(), -xboxDrive.getLeftX()))
         //));
 
         // Run SysId routines when holding back/start and X/Y.

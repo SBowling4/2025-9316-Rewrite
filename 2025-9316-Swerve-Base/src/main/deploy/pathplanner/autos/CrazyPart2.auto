@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "VisPathRight"
+            "pathName": "Crazy"
           }
         },
         {
@@ -23,7 +23,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "L1Pos"
+                  "name": "L1PosLONG"
                 }
               },
               {
