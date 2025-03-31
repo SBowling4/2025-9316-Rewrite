@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.AlgaeCommand;
 import frc.robot.commands.AutoCoralReleaseCommand;
 import frc.robot.commands.AutoCoralStopCommand;
+import frc.robot.commands.AutoIntakeCommand;
 import frc.robot.commands.AutoVisionCommand;
 import frc.robot.commands.ElevatorCommand;
 import frc.robot.commands.AlgaeCommand.AlgaeMode;
@@ -86,13 +87,13 @@ public class AutoSubsystem extends SubsystemBase {
     public static Command AutoExchange(CoralHandlerSubsystem coralHandlerSubsystem, ElevatorSubsystem elevatorSubsystem, AlgaeSubsystem algaeSubsystem){
     return new SequentialCommandGroup(
 
-        new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L1_POSITION).withTimeout(2),
+        new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L1_POSITION).withTimeout(1.25),
 
-        new AutoCoralReleaseCommand(coralHandlerSubsystem).withTimeout(2.0),
+        new AutoCoralReleaseCommand(coralHandlerSubsystem).withTimeout(1.0),
 
-        new AutoCoralStopCommand(coralHandlerSubsystem).withTimeout(2),
+        new AutoCoralStopCommand(coralHandlerSubsystem).withTimeout(.01),
 
-        new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.INTAKE_POSITION).withTimeout(2)
+        new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.INTAKE_POSITION).withTimeout(.5)
     );
     }
 
@@ -104,6 +105,11 @@ public class AutoSubsystem extends SubsystemBase {
     public static Command Scoral(CoralHandlerSubsystem coralHandlerSubsystem){
         logger.info("Executing Coral score Auto Mode");
         return new AutoCoralReleaseCommand(coralHandlerSubsystem);
+    }
+
+    public static Command AutoIntake(CoralHandlerSubsystem coralHandlerSubsystem){
+        logger.info("Executing Intake Mode");
+        return new AutoIntakeCommand(coralHandlerSubsystem);
     }
 
     public static Command Stopal(CoralHandlerSubsystem coralHandlerSubsystem){
@@ -123,7 +129,7 @@ public class AutoSubsystem extends SubsystemBase {
 
     public static Command L1PosLONG(ElevatorSubsystem elevatorSubsystem){
         logger.info("Executing Coral L1 height Auto Mode");
-        return new SequentialCommandGroup(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L1_POSITION).withTimeout(3));
+        return new SequentialCommandGroup(new ElevatorCommand(elevatorSubsystem, ElevatorSubsystem.L1_POSITION).withTimeout(2));
     }
 
     public static Command Algae1Pos(ElevatorSubsystem elevatorSubsystem){

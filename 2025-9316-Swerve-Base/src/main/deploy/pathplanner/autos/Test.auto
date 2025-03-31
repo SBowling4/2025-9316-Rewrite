@@ -7,13 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "StartReef2"
+            "pathName": "OffLine"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": null
+            "name": "AutoIntake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Station to score"
           }
         }
       ]

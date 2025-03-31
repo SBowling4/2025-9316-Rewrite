@@ -7,25 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "NoVision1"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "NoVisionScore"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 3.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "NoVision2"
+            "pathName": "OffLine"
           }
         }
       ]

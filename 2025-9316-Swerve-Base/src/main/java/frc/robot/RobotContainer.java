@@ -101,6 +101,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("AutoVisionCommand", autoSubsystem.AutoVision(coralHandler, visionSubsystem, drivetrain).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
         NamedCommands.registerCommand("StopVision", autoSubsystem.StopVision(coralHandler, visionSubsystem, drivetrain).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
         //individual commands
+        NamedCommands.registerCommand("AutoIntake", autoSubsystem.AutoIntake(coralHandler).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
         NamedCommands.registerCommand("Scoral", autoSubsystem.Scoral(coralHandler));
         NamedCommands.registerCommand("L2Pos", autoSubsystem.L2Pos(elevatorSubsystem));
         NamedCommands.registerCommand("L1Pos", autoSubsystem.L1Pos(elevatorSubsystem).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
