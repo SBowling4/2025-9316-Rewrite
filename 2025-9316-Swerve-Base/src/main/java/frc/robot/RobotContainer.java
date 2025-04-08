@@ -54,7 +54,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @SuppressWarnings("unused") // For now :)
-
 public class RobotContainer {
     private final ShuffleboardTab mainTab = Shuffleboard.getTab("Main Tab");
     private final ShuffleboardTab autoTab = Shuffleboard.getTab("Autonomous");
@@ -171,8 +170,8 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically            
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(-xboxDrive.getLeftY() * -xboxDrive.getLeftY()* Math.signum(xboxDrive.getLeftY()) * MaxSpeed/(xboxDrive.rightTrigger().getAsBoolean() ? 2 : 6)) // Drive forward with negative Y (forward)
-                    .withVelocityY(-xboxDrive.getLeftX() * -xboxDrive.getLeftX()* Math.signum(xboxDrive.getLeftX()) * MaxSpeed/(xboxDrive.rightTrigger().getAsBoolean() ? 2 : 6)) // Drive left with negative X (left)
+                drive.withVelocityX(-xboxDrive.getLeftY() * -xboxDrive.getLeftY()* Math.signum(xboxDrive.getLeftY()) * MaxSpeed/(xboxDrive.rightTrigger().getAsBoolean() ? 1.5 : 6)) // Drive forward with negative Y (forward)
+                    .withVelocityY(-xboxDrive.getLeftX() * -xboxDrive.getLeftX()* Math.signum(xboxDrive.getLeftX()) * MaxSpeed/(xboxDrive.rightTrigger().getAsBoolean() ? 1.5 : 6)) // Drive left with negative X (left)
                     .withRotationalRate(-xboxDrive.getRightX() * MaxAngularRate/(xboxDrive.rightTrigger().getAsBoolean() ? 1 : 2)) // Drive counterclockwise with negative X (left)
             )
         );

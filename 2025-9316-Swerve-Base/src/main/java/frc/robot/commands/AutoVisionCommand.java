@@ -94,14 +94,14 @@ public class AutoVisionCommand  extends Command{
     public boolean isFinished() {
         
         double range = visionSubsystem.getRange().orElse(2.0);
-        if(range < .35){
+        if(range < .325){
             SwerveRequest.RobotCentric request = visDrive
                 .withVelocityX(0)
                 .withVelocityY(0)
                 .withRotationalRate(0);
             drivetrain.setControl(request);
         }
-        return range < 0.35;
+        return range < 0.325;
         //return visionSubsystem.getRange().orElse(0.0) < 0.5;
     }
 
