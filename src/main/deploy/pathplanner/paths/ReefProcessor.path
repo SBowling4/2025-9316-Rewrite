@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 6.099611643566144,
+        "y": 4.055854554993686
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 7.3027500000000005,
+        "y": 4.13225
+      },
+      "isLocked": false,
+      "linkedName": "Ideal9316Part2"
+    },
+    {
+      "anchor": {
+        "x": 5.976749999999999,
+        "y": 0.6125
+      },
+      "prevControl": {
+        "x": 6.754078767123287,
+        "y": 2.556523116438356
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 10.0,
+    "maxAcceleration": 5.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.5,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -90.29278968140395
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -179.90551711021516
+  },
+  "useDefaultConstraints": true
+}
