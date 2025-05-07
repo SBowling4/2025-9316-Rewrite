@@ -17,7 +17,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.VisionConstants;
+import frc.robot.util.constants.Constants.VisionConstants;
 
 public class VisionSubsystem extends SubsystemBase {
 

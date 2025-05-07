@@ -4,13 +4,16 @@ import com.ctre.phoenix.led.*;
 import com.ctre.phoenix.led.CANdle.LEDStripType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.util.constants.Constants;
 
+@SuppressWarnings("unused")
 public class LEDSubsystem extends SubsystemBase {
     private static CANdle m_candle = new CANdle(Constants.LEDConstants.CANDLE_ID);
     private final int LEDCount = Constants.LEDConstants.NUM_OF_LEDS;
     public static String  strLEDColor = "";
     private Animation m_toAnimate = null;
+
+    public static LEDSubsystem instance;
 
     public enum AnimationTypes {
         ColorFlow,
@@ -24,12 +27,14 @@ public class LEDSubsystem extends SubsystemBase {
         TwinkleOff,
         SetAll
     }
+
     private AnimationTypes m_currentAnimation;
 
     public LEDSubsystem() {
         configureCANdle();
         changeAnimation(AnimationTypes.Strobe);
     }
+    
     public void configureCANdle(){
         CANdleConfiguration configAll = new CANdleConfiguration();
         configAll.statusLedOffWhenActive = true;
@@ -110,13 +115,11 @@ public class LEDSubsystem extends SubsystemBase {
     public String getLEDColor(){
         return LEDSubsystem.strLEDColor;
     }
-    @Override
-    public void periodic(){
-     /*   if (m_toAnimate == null){
-            m_candle.setLEDs(0,0,255); //Blue (Default)
-        }else{
-            m_candle.animate(m_toAnimate);
-        }*/
+
+    public static LEDSubsystem getInstance() {
+        if (instance == null) {
+            instance = new LEDSubsystem();
+        }
+        return instance;
     }
-    
 }

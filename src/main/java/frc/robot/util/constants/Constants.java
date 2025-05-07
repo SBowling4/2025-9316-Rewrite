@@ -1,52 +1,36 @@
-package frc.robot;
+package frc.robot.util.constants;
 
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.I2C.Port;
 
-import com.revrobotics.spark.SparkMax;
-import frc.robot.subsystems.CoralHandlerSubsystem;
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.controller.ElevatorFeedforward;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.XboxController;
 
-@SuppressWarnings("unused")
 public class Constants {
+
+    public static final int GLOBAL_CURRENT_LIMIT_DEFAULT = 50;
 
     public static final class ElevatorConstants {
         public static final double ELEVATOR_UP_POSITION = 0.25; // Units? (e.g., percentage, encoder ticks)
         public static final double ELEVATOR_DOWN_POSITION = 0; // Units?
         public static final int ELEVATOR_MOTOR_1_ID = 10; // Motor ID
         public static final int ELEVATOR_MOTOR_2_ID = 9;  // Motor ID
-        public static final int ELEVATOR_ENCODER_PORT = 9; // Encoder port
+
+        public static final int ELEVATOR_ENCODER_CHANNEL_A = 8; // Encoder channel A
+        public static final int ELEVATOR_ENCODER_CHANNEL_B = 9; // Encoder channel B
+
         public static final int smartCurrentLimit = 60;
 
-        private static final double MAX_HEIGHT = 40;
-        private static final double MIN_HEIGHT = 0;
+        public static final double MAX_HEIGHT = 40;
+        public static final double MIN_HEIGHT = 0;
 
         public static final double INTAKE_POSITION = 0;
-        public static final double L1_POSITION = 10.25;        //11    
-        public static final double L2_POSITION = 26; 
-               //27
-        public static final double LOW_ALGAE_POSITION = 18.5;        //36
-        public static final double HIGH_ALGAE_POSITION = 34.5;        //36
-        public static final double MANUAL_ADJUST_INCREMENT = .5; // Small adjustment for manual control
-        private static final double TICKS_PER_INCH = 185.0;
-
-
-        public static final class ElevatorLeft {
-            public static final int kFollowerModeLeaderId = 9;
-            public static final boolean kFollowerModeIsInverted = true;
-        }
-
-        public static final class ElevatorRight { 
-            public static final int kCanID = 9;
-            public static final int kInputMode = 1;
-            public static final int kIdleMode = 1;
-            public static final boolean kInverted = false;
-        }
+        public static final double L2_POSITION = 10.25;         
+        public static final double L3_POSITION = 26; 
+        public static final double LOW_ALGAE_POSITION = 18.5;        
+        public static final double HIGH_ALGAE_POSITION = 34.5;
+                
+        public static final double MANUAL_ADJUST_INCREMENT = .5; 
+        public static final double TICKS_PER_INCH = 185.0;
     }
 
 
