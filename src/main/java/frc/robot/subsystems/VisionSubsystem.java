@@ -1,12 +1,16 @@
 package frc.robot.subsystems;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.PhotonUtils;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
@@ -17,6 +21,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 import frc.robot.util.constants.Constants.VisionConstants;
 
 public class VisionSubsystem extends SubsystemBase {
@@ -30,11 +35,13 @@ public class VisionSubsystem extends SubsystemBase {
     public PIDController driveControllerY = new PIDController(VisionConstants.VY_Kp, VisionConstants.VY_Ki, VisionConstants.VY_Kd);
     public PIDController driveControllerX = new PIDController(VisionConstants.VX_Kp, VisionConstants.VX_Ki, VisionConstants.VX_Kd);
 
-    private AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeAndyMark);
+    private AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
     
     // Transform from camera to robot center (measurements in meters)
     public static final Transform3d CAMERA_TO_ROBOT = 
         new Transform3d(new Translation3d(0.05, 0.0, 0.1), new Rotation3d(0, 0, 0));
+
+    private CommandSwerveDrivetrain drivetrain = RobotContainer.getDrivetrain();
     
     public VisionSubsystem() {
         // Initialize camera with name from constants
@@ -47,7 +54,7 @@ public class VisionSubsystem extends SubsystemBase {
                 CAMERA_TO_ROBOT);
         
         // Get initial result
-        result = camera.getLatestResult();
+        result = getLatestResult();
 
         // Add debug info to Shuffleboard
         Shuffleboard.getTab("Vision").addBoolean("Camera Connected", () -> camera.isConnected());
@@ -61,21 +68,6 @@ public class VisionSubsystem extends SubsystemBase {
         Shuffleboard.getTab("Vision").add("X PID", driveControllerX);
     }
 
-    @Override
-    public void periodic() {
-        // Update the latest result from the camera
-        result = camera.getLatestResult();
-        //System.out.println("Camera Connected: " + camera.isConnected());
-        if (result.hasTargets()) {
-            //System.out.println("Target Detected: Yaw = " + result.getBestTarget().getYaw() +
-            //                   ", Range = " + result.getBestTarget().getBestCameraToTarget().getTranslation().getX());
-                               //", Horizontal Offset = " + result.getBestTarget().getBestCameraToTarget().getTranslation().getY()+
-                               //", range = " + result.getBestTarget().getBestCameraToTarget().getTranslation().getY();
-        } else {
-            // System.out.println("No target detected.");
-        }
-    }
-
     /**
      * Gets the estimated robot pose based on vision
      */
@@ -85,38 +77,38 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     // In VisionSubsystem.java, add a method to get the tag's rotation relative to the camera
-public Optional<Double> getTagYaw() {
-    if (hasTarget()) {
-        // This gives us the yaw of the tag, which tells us the tag's orientation
-        return Optional.of(result.getBestTarget().getBestCameraToTarget().getRotation().getZ());
-    } else {
-        return Optional.empty();
-    }
-}
-
-// Add a method to calculate rotation needed for parallel alignment
-public double calculateParallelRotationPower(double defaultRotation, boolean enableVision) {
-    if (hasTarget() && enableVision) {
-        System.out.println("Current range: " + this.getRange().orElse(-1.0));
-        Optional<Double> tagYaw = getTagYaw();
-        if (tagYaw.isPresent()) {
-            double targetAngle;
-            // To align parallel, we want our rotation to be 90 degrees (π/2 radians) 
-            // offset from the tag's facing direction
-            if(tagYaw.get() > 0) {
-                targetAngle = 90;
-            } else {
-                targetAngle = -90;
-            }
-            
-            // We still want to use the yaw to the target as our current angle,
-            // as we're calculating the difference between where we're pointed and where we want to point
-            System.out.println("RotPower:" + -rotController.calculate(getYaw().get(), targetAngle));
-            return -rotController.calculate(getYaw().get(), targetAngle);
+    public Optional<Double> getTagYaw() {
+        if (hasTarget()) {
+            // This gives us the yaw of the tag, which tells us the tag's orientation
+            return Optional.of(result.getBestTarget().getBestCameraToTarget().getRotation().getZ());
+        } else {
+            return Optional.empty();
         }
     }
-    return defaultRotation;
-}
+
+    // Add a method to calculate rotation needed for parallel alignment
+    public double calculateParallelRotationPower(double defaultRotation, boolean enableVision) {
+        if (hasTarget() && enableVision) {
+            System.out.println("Current range: " + this.getRange().orElse(-1.0));
+            Optional<Double> tagYaw = getTagYaw();
+            if (tagYaw.isPresent()) {
+                double targetAngle;
+                // To align parallel, we want our rotation to be 90 degrees (π/2 radians) 
+                // offset from the tag's facing direction
+                if(tagYaw.get() > 0) {
+                    targetAngle = 90;
+                } else {
+                    targetAngle = -90;
+                }
+                
+                // We still want to use the yaw to the target as our current angle,
+                // as we're calculating the difference between where we're pointed and where we want to point
+                System.out.println("RotPower:" + -rotController.calculate(getYaw().get(), targetAngle));
+                return -rotController.calculate(getYaw().get(), targetAngle);
+            }
+        }
+        return defaultRotation;
+    }
 
     /**
      * Checks if the camera sees any AprilTags
@@ -217,5 +209,48 @@ public double calculateParallelRotationPower(double defaultRotation, boolean ena
         } else {
             return defaultPower;
         }
+    }
+
+    private PhotonPipelineResult clearEvilResults(PhotonPipelineResult result) {
+        List<PhotonTrackedTarget> evilTargets = new ArrayList<>();
+
+        for (PhotonTrackedTarget target : result.getTargets()) {
+            var tagPose = aprilTagFieldLayout.getTagPose(target.getFiducialId());
+            if (tagPose.isEmpty()) {
+                evilTargets.add(target);
+                continue;
+            }
+            var distance = PhotonUtils.getDistanceToPose(drivetrain.getPose(), tagPose.get().toPose2d());
+
+            if (target.getPoseAmbiguity() > .2 || distance > VisionConstants.MAX_DISTANCE) {
+                evilTargets.add(target);
+            }
+        }
+
+        result.targets.removeAll(evilTargets);
+
+        return result;
+    }
+
+    @Override
+    public void periodic() {
+        if (!camera.isConnected()) return;
+
+        result = getLatestResult();
+        if (!result.hasTargets()) return;
+
+        var poseResult = result;
+        poseResult = clearEvilResults(poseResult);
+        
+        Optional<EstimatedRobotPose> estimatedRobotPose = photonPoseEstimator.update(result);
+        if (estimatedRobotPose.isEmpty()) return;
+
+        drivetrain.addVisionMeasurement(estimatedRobotPose.get().estimatedPose.toPose2d(), estimatedRobotPose.get().timestampSeconds);
+    }
+
+    private PhotonPipelineResult getLatestResult() {
+        var allResults = camera.getAllUnreadResults();
+        int size = allResults.size();
+        return size > 0 ? allResults.get(size - 1) : new PhotonPipelineResult();
     }
 }

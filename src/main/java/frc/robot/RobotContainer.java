@@ -75,12 +75,12 @@ public class RobotContainer {
     private final CommandXboxController manipulatorXbox = new CommandXboxController(1);      //Manipulator Controller
  
 
-    public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-    public final LEDSubsystem ledSubsystem = LEDSubsystem.getInstance();
+    private static final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+    private final LEDSubsystem ledSubsystem = LEDSubsystem.getInstance();
     private final CoralSubsystem coralSubsystem = CoralSubsystem.getInstance();
-    public final AlgaeSubsystem algaeSubsystem = AlgaeSubsystem.getInstance();
-    public final VisionSubsystem visionSubsystem = new VisionSubsystem();
-    public final ElevatorSubsystem elevatorSubsystem = ElevatorSubsystem.getInstance(); 
+    private final AlgaeSubsystem algaeSubsystem = AlgaeSubsystem.getInstance();
+    private static final VisionSubsystem visionSubsystem = new VisionSubsystem();
+    private final ElevatorSubsystem elevatorSubsystem = ElevatorSubsystem.getInstance(); 
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
@@ -93,9 +93,6 @@ public class RobotContainer {
         SmartDashboard.putData("Auto Chooser", autoChooser);
     }
 
-
-
- 
     private void configureBindings() {
         drivetrain.setDefaultCommand(    
             drivetrain.applyRequest(() ->
@@ -155,6 +152,14 @@ public class RobotContainer {
         } else {
             return Commands.print("No autonomous command configured, if a path was chosen, this is an error.");
         }
+    }
+
+    public static CommandSwerveDrivetrain getDrivetrain() {
+        return drivetrain;
+    }
+
+    public static VisionSubsystem getVisionSubsystem() {
+        return visionSubsystem;
     }
 
     

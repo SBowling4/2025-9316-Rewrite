@@ -69,7 +69,7 @@ public class Constants {
         
         
         
-        
+        public static final double MAX_DISTANCE = 3.0;
         
         
        //ignore 

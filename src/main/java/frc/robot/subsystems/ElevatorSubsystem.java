@@ -50,7 +50,6 @@ public class ElevatorSubsystem extends SubsystemBase {
         Shuffleboard.getTab("Elevator").addDouble("Target Position", () -> targetPosition);
     }
 
-    // Setpoint method for PID control
     public Command setElevatorPosition(double targetPosition) {
         if (isWithinBounds(targetPosition)) { 
             double elevatorPower = elevatorPID.calculate(getElevatorPosition(), targetPosition);
@@ -94,6 +93,10 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public boolean isWithinBounds(double position) {
         return position >= ElevatorConstants.MIN_HEIGHT && position <= ElevatorConstants.MAX_HEIGHT;
+    }
+
+    public boolean atSetpoint() {
+        return elevatorPID.atSetpoint();
     }
 
     private void setLEDColor(int[] color, String colorName) {
