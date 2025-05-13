@@ -13,7 +13,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 public class AlgaeSubsystem extends SubsystemBase {
    private SparkMax motor;
-   public LEDSubsystem ledSubsystem;
+   public LEDSubsystem ledSubsystem = LEDSubsystem.getInstance();
 
     private static AlgaeSubsystem instance;
 

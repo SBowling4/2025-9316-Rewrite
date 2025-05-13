@@ -45,13 +45,13 @@ public class CoralSubsystem extends SubsystemBase {
     public Command nudgeForwards(){
         ledSubsystem.changeLEDColor(Constants.LEDConstants.RED, "red");
 
-        return Commands.run(() -> coralHandlerMotor.set(0.19), this).andThen(Commands.run(() -> stopCoralHandler(), this));
+        return Commands.startEnd(() -> coralHandlerMotor.set(0.19), () -> stopCoralHandler(), this);
     }
 
     public Command nudgeBack(){
         ledSubsystem.changeLEDColor(Constants.LEDConstants.RED, "red");
 
-        return Commands.run(() -> coralHandlerMotor.set(-0.19), this).andThen(Commands.run(() -> stopCoralHandler(), this));
+        return Commands.startEnd(() -> coralHandlerMotor.set(-0.19), () -> stopCoralHandler(), this);
     }
 
     public Command outtake() {

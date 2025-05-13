@@ -54,7 +54,7 @@ public class VisionSubsystem extends SubsystemBase {
                 CAMERA_TO_ROBOT);
         
         // Get initial result
-        result = getLatestResult();
+        result = getLatestResult().orElse(new PhotonPipelineResult());
 
         // Add debug info to Shuffleboard
         Shuffleboard.getTab("Vision").addBoolean("Camera Connected", () -> camera.isConnected());
@@ -87,9 +87,8 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     // Add a method to calculate rotation needed for parallel alignment
-    public double calculateParallelRotationPower(double defaultRotation, boolean enableVision) {
-        if (hasTarget() && enableVision) {
-            System.out.println("Current range: " + this.getRange().orElse(-1.0));
+    public double calculateParallelRotationPower(double defaultRotation) {
+        if (hasTarget()) {
             Optional<Double> tagYaw = getTagYaw();
             if (tagYaw.isPresent()) {
                 double targetAngle;
@@ -103,7 +102,6 @@ public class VisionSubsystem extends SubsystemBase {
                 
                 // We still want to use the yaw to the target as our current angle,
                 // as we're calculating the difference between where we're pointed and where we want to point
-                System.out.println("RotPower:" + -rotController.calculate(getYaw().get(), targetAngle));
                 return -rotController.calculate(getYaw().get(), targetAngle);
             }
         }
@@ -201,14 +199,20 @@ public class VisionSubsystem extends SubsystemBase {
      * @param enableVision Whether to use vision for alignment
      * @return The calculated Y power
      */
-    public double calculateYPower(double defaultPower, double targetOffset, boolean enableVision) {
-        if (hasTarget() && enableVision) {
+    public double calculateYPower(double defaultPower, double targetOffset) {
+        if (hasTarget()) {
             // Use the yaw for centering - negative because positive yaw means target is to the right
             System.out.println("Ypower:" + driveControllerY.calculate(getYaw().get(), -targetOffset));
             return driveControllerY.calculate(getYaw().get(), -targetOffset);
         } else {
             return defaultPower;
         }
+    }
+
+    private Optional<PhotonPipelineResult> getLatestResult() {
+        var allResults = camera.getAllUnreadResults();
+        int size = allResults.size();
+        return size > 0 ? Optional.of(allResults.get(size - 1)) : Optional.empty();
     }
 
     private PhotonPipelineResult clearEvilResults(PhotonPipelineResult result) {
@@ -236,7 +240,8 @@ public class VisionSubsystem extends SubsystemBase {
     public void periodic() {
         if (!camera.isConnected()) return;
 
-        result = getLatestResult();
+        var lastResult = result;
+        result = getLatestResult().orElse(lastResult);
         if (!result.hasTargets()) return;
 
         var poseResult = result;
@@ -246,11 +251,5 @@ public class VisionSubsystem extends SubsystemBase {
         if (estimatedRobotPose.isEmpty()) return;
 
         drivetrain.addVisionMeasurement(estimatedRobotPose.get().estimatedPose.toPose2d(), estimatedRobotPose.get().timestampSeconds);
-    }
-
-    private PhotonPipelineResult getLatestResult() {
-        var allResults = camera.getAllUnreadResults();
-        int size = allResults.size();
-        return size > 0 ? allResults.get(size - 1) : new PhotonPipelineResult();
     }
 }

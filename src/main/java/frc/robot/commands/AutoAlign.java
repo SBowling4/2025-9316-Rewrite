@@ -9,12 +9,13 @@ import frc.robot.util.constants.Constants.VisionConstants;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.util.Optional;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.wpilibj.DataLogManager;
 
-public class AutoAlign  extends Command{
-    
+public class AutoAlign extends Command{
     private final VisionSubsystem visionSubsystem = RobotContainer.getVisionSubsystem();
     private final CommandSwerveDrivetrain drivetrain = RobotContainer.getDrivetrain();
 
@@ -25,7 +26,7 @@ public class AutoAlign  extends Command{
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
 
     public AutoAlign(){
-        addRequirements(visionSubsystem , drivetrain);
+        addRequirements(visionSubsystem, drivetrain);
     }
 
 
@@ -44,8 +45,8 @@ public class AutoAlign  extends Command{
 
         // Calculate the PID outputs
         double xPower = visionSubsystem.calculateXPower(0, VisionConstants.xOffset, true);
-        double yPower = visionSubsystem.calculateYPower(0, VisionConstants.yOffsetLeft, true);
-        double rotationPower = visionSubsystem.calculateParallelRotationPower(0, true);
+        double yPower = visionSubsystem.calculateYPower(0, VisionConstants.yOffsetLeft);
+        double rotationPower = visionSubsystem.calculateParallelRotationPower(0);
        
         // Compute final velocities
         double velocityX = -xPower * MaxSpeed;
@@ -71,10 +72,11 @@ public class AutoAlign  extends Command{
     }
 
     public boolean isFinished() {    
-        double range = visionSubsystem.getRange().orElse(-1.0);
-        if (range < 0) return false;
+        Optional<Double> range = visionSubsystem.getRange();
+
+        if (range.isEmpty()) return false;
         
-        return range < 0.325;
+        return range.get() < 0.325;
     }
 
     @Override
@@ -83,6 +85,7 @@ public class AutoAlign  extends Command{
             .withVelocityX(0)
             .withVelocityY(0)
             .withRotationalRate(0);
+
         drivetrain.setControl(request);
     }
 

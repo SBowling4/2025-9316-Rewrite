@@ -64,7 +64,7 @@ public class ElevatorSubsystem extends SubsystemBase {
                 }
             }
         } else {
-            setLEDColor(Constants.LEDConstants.RED, "red");
+            ledSubsystem.changeLEDColor(Constants.LEDConstants.RED, "red");
             stop();
         }
 
@@ -97,12 +97,6 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public boolean atSetpoint() {
         return elevatorPID.atSetpoint();
-    }
-
-    private void setLEDColor(int[] color, String colorName) {
-        // Placeholder for LED control
-        ledSubsystem.changeLEDColor(color, colorName);
-        System.out.println("LED Color: " + colorName);
     }
 
     public static ElevatorSubsystem getInstance() {

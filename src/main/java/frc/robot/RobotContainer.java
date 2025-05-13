@@ -28,6 +28,8 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.AutoAlign;
+import frc.robot.commands.AutoScore;
 import frc.robot.subsystems.AlgaeSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.CoralSubsystem;
@@ -96,44 +98,31 @@ public class RobotContainer {
     private void configureBindings() {
         drivetrain.setDefaultCommand(    
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(-driverXbox.getLeftY() * -driverXbox.getLeftY()* Math.signum(driverXbox.getLeftY()) * MaxSpeed/(driverXbox.rightTrigger().getAsBoolean() ? 1.5 : 6)) // Drive forward with negative Y (forward)
-                    .withVelocityY(-driverXbox.getLeftX() * -driverXbox.getLeftX()* Math.signum(driverXbox.getLeftX()) * MaxSpeed/(driverXbox.rightTrigger().getAsBoolean() ? 1.5 : 6)) // Drive left with negative X (left)
-                    .withRotationalRate(-driverXbox.getRightX() * MaxAngularRate/(driverXbox.rightTrigger().getAsBoolean() ? 1 : 2)) // Drive counterclockwise with negative X (left)
+                drive.withVelocityX(driverXbox.getLeftY() * MaxSpeed/ 6) // Drive forward with negative Y (forward)
+                    .withVelocityY(-driverXbox.getLeftX() * MaxSpeed/ 6) // Drive left with negative X (left)
+                    .withRotationalRate(-driverXbox.getRightX() * MaxAngularRate / 2) // Drive counterclockwise with negative X (left)
             )
         );
-        
 
-        driverXbox.x().whileTrue(
-            drivetrain.applyRequest(() -> visDrive
-                // Forward/backward movement based on distance from target
-                .withVelocityX(-visionSubsystem.calculateXPower(
-                    -driverXbox.getLeftY() * MaxSpeed / 6,
-                    Constants.VisionConstants.xOffset,
-                    true) * MaxSpeed)
-                    
-                // Left/right movement to center with the target
-                .withVelocityY(-visionSubsystem.calculateYPower(
-                    -driverXbox.getLeftX() * MaxSpeed / 6,
-                    Constants.VisionConstants.yOffsetLeft,
-                    true) * MaxSpeed)
-                    
-                // Rotation to align parallel to the target
-                .withRotationalRate(-visionSubsystem.calculateParallelRotationPower(
-                    -driverXbox.getRightX() * MaxAngularRate / 2,
-                    true) * 0)
+        driverXbox.rightTrigger().whileTrue(
+            drivetrain.applyRequest(() ->
+                drive.withVelocityX(driverXbox.getLeftY() * MaxSpeed / 1.5)
+                    .withVelocityY(driverXbox.getLeftX() * MaxSpeed / 1.5)
+                    .withRotationalRate(driverXbox.getRightX() * MaxAngularRate)            
             )
         );
+
+        driverXbox.x().whileTrue(new AutoAlign());
 
         driverXbox.a().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
-
 
         manipulatorXbox.leftTrigger().whileTrue(algaeSubsystem.intake());
         manipulatorXbox.leftTrigger().whileTrue(algaeSubsystem.outtake());
 
         // Elevator Controls
         manipulatorXbox.a().onTrue(elevatorSubsystem.setElevatorPosition(ElevatorConstants.INTAKE_POSITION));    
-        manipulatorXbox.b().onTrue(elevatorSubsystem.setElevatorPosition(ElevatorConstants.L2_POSITION));       
-        manipulatorXbox.x().onTrue(elevatorSubsystem.setElevatorPosition(ElevatorConstants.L3_POSITION));        
+        manipulatorXbox.b().onTrue(new AutoScore(ElevatorConstants.L2_POSITION));       
+        manipulatorXbox.x().onTrue(new AutoScore(ElevatorConstants.L3_POSITION));        
         manipulatorXbox.rightBumper().onTrue(elevatorSubsystem.setElevatorPosition(ElevatorConstants.LOW_ALGAE_POSITION));        
         manipulatorXbox.leftBumper().onTrue(elevatorSubsystem.setElevatorPosition(ElevatorConstants.HIGH_ALGAE_POSITION));      
         
