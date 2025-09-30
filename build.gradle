@@ -3,6 +3,11 @@ plugins {
     id "edu.wpi.first.GradleRIO" version "2025.3.1"
 }
 
+repositories {
+    mavenCentral()
+    maven { url 'https://www.revrobotics.com/content/sw/max/sdk/maven/' }
+}
+
 dependencies {
     implementation 'org.elasticsearch.client:elasticsearch-rest-high-level-client:7.10.2'
 }
@@ -59,6 +64,7 @@ dependencies {
     implementation wpi.java.deps.wpilib()
     implementation wpi.java.vendor.java()
     implementation 'com.thethriftybot.frc:ThriftyLib-java:2025.0.2' // Explicit implementation
+    implementation 'com.revrobotics.frc:DistanceSensor-java:2025.0.0' // Added missing dependency
 
     roborioDebug wpi.java.deps.wpilibJniDebug(wpi.platforms.roborio)
     roborioDebug wpi.java.vendor.jniDebug(wpi.platforms.roborio)
